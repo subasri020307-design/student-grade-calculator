@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Grade Calculator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5ff;
+      margin: 0;
+      padding: 25px;
+      color: #172554;
+    }
+
+    .container {
+      max-width: 450px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px #00000012;
+    }
+
+    h1 {
+      text-align: center;
+      color: #315efb;
+    }
+
+    p {
+      text-align: center;
+      color: #64748b;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 7px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 22px;
+      background: #315efb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #result {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: #eff6ff;
+      border-radius: 10px;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Grade Calculator</h1>
+    <p>Calculate your marks and grade easily!</p>
+
+    <form id="gradeForm">
+      <div id="subjects"></div>
+      <button type="submit">Calculate Result</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const subjects = document.getElementById("subjects");
+
+    for (let i = 1; i <= 5; i++) {
+      subjects.innerHTML += `
+        <label for="mark${i}">Subject ${i} Marks</label>
+        <input type="number" id="mark${i}"
+          min="0" max="100" required
+          placeholder="Enter marks out of 100">
+      `;
+    }
+
+    document.getElementById("gradeForm")
+      .addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        let marks = [];
+
+        for (let i = 1; i <= 5; i++) {
+          marks.push(Number(
+            document.getElementById("mark" + i).value
+          ));
+        }
+
+        if (marks.some(mark => mark < 0 || mark > 100)) {
+          alert("Enter marks between 0 and 100.");
+          return;
+        }
+
+        let total = marks.reduce((sum, mark) => sum + mark, 0);
+        let average = total / 5;
+
+        let grade;
+
+        if (average >= 90) grade = "A+";
+        else if (average >= 80) grade = "A";
+        else if (average >= 70) grade = "B";
+        else if (average >= 60) grade = "C";
+        else if (average >= 50) grade = "D";
+        else grade = "Needs Improvement";
+
+        let pass = marks.every(mark => mark >= 35);
+
+        let result = document.getElementById("result");
+        result.style.display = "block";
+
+        result.innerHTML = `
+          <strong>Total:</strong> ${total} / 500<br>
+          <strong>Average:</strong> ${average.toFixed(2)}%<br>
+          <strong>Grade:</strong> ${grade}<br>
+          <strong>Status:</strong> ${pass ? "Pass" : "Fail"}
+        `;
+      });
+  </script>
+</body>
+</html>
